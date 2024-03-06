@@ -15,10 +15,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -26,7 +26,7 @@ jobs:
         run: python v2ray_server_finder.py
 
       - name: Commit and push files
-        uses: EndBug/add-and-commit@v7
+        uses: EndBug/add-and-commit@v9
         with:
           author_name: "Github Actions"
           author_email: "actions@github.com"
