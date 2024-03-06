@@ -20,13 +20,13 @@ urls = {
 secert = str()
 
 for url in urls:
-    with urllib.request.urlopen(url) as response:
-        try:
+    try:
+        with urllib.request.urlopen(url) as response:
             for line in base64.b64decode(response.read()).decode("utf8").splitlines():
                 if line.startswith("ss:/") and ("🇺🇸" in line or "🇬🇧" in line):
                     secert += f"{line}\n"
-        except Exception:
-            pass
+    except Exception:
+        pass
 
 with open("./ss.txt", "wb") as fl:
     fl.write(base64.b64encode(secert.encode()))
