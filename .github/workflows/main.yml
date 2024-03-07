@@ -20,10 +20,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
       - name: Run Python script and save output to file
-        run: python v2ray_server_finder.py
+        run: python collector_async.py
 
       - name: Commit and push files
         uses: EndBug/add-and-commit@v9
