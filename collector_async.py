@@ -16,6 +16,8 @@ logger.setLevel(logging.INFO)
 logger.addHandler(stream_handler)
 # /Configure logging
 
+western_counties = ("🇬🇧", "🇺🇸", "🇩🇪", "🇫🇷", "🇳🇱")
+
 
 async def fetch_url(session, url):
     try:
@@ -50,7 +52,8 @@ async def main(urls):
             for result in results
             if result
             for line in result.splitlines()
-            if line.startswith("ss://") and ("🇺🇸" in line or "🇬🇧" in line)
+            if line.startswith("ss://")
+            and any(True for flag in western_counties if flag in line)
         }
 
         # Write b64encoded data to file

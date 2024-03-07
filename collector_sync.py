@@ -15,6 +15,8 @@ logger.setLevel(logging.INFO)
 logger.addHandler(stream_handler)
 # /Configure logging
 
+western_counties = ("🇬🇧", "🇺🇸", "🇩🇪", "🇫🇷", "🇳🇱")
+
 data = set()  # Initialize an empty set to store filtered data
 
 for url in urls:
