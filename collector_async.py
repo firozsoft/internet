@@ -16,7 +16,10 @@ logger.setLevel(logging.INFO)
 logger.addHandler(stream_handler)
 # /Configure logging
 
-western_counties = ("🇬🇧", "🇺🇸", "🇩🇪", "🇫🇷", "🇳🇱")
+western_counties = (
+    "🇬🇧", "🇺🇸", 
+    #"🇩🇪", "🇫🇷", "🇳🇱"
+)
 
 
 async def fetch_url(session, url):
