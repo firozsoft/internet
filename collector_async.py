@@ -59,13 +59,12 @@ async def main(urls):
             and any(True for flag in western_counties if flag in line)
         ]
 
-    # remove duplicate lines
-    filtered_data = set(filtered_data)
+    return filtered_data
+
+
+if __name__ == "__main__":
+    filtered_data = set(asyncio.run(main(urls)))
 
     # Write b64encoded data to file
     with open("./ss.txt", "wb") as fl:
         fl.write(base64.b64encode("\n".join(filtered_data).encode()))
-
-
-if __name__ == "__main__":
-    asyncio.run(main(urls))
