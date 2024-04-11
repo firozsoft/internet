@@ -13,6 +13,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,10 +28,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Run Python script and save output to file
+      - name: Run the collector script
         run: python collector_async.py
 
-      - name: Commit and push files
+      - name: Push updated file
         uses: EndBug/add-and-commit@v9
         with:
           author_name: "Github Actions"
@@ -36,5 +39,3 @@ jobs:
           message: "Updated 🥳"
           add: "."
           push: "https://github.com/firozsoft/internet.git"
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
