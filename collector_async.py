@@ -55,8 +55,7 @@ async def main(urls):
             for result in results
             if result
             for line in result.splitlines()
-            if line.startswith("ss://")
-            and any(True for flag in western_counties if flag in line)
+            if line.startswith("ss://") and any(True for flag in western_counties if flag in line)
         ]
 
     return filtered_data
@@ -66,5 +65,5 @@ if __name__ == "__main__":
     filtered_data = set(asyncio.run(main(urls)))
 
     # Write b64encoded data to file
-    with open("./ss.txt", "wb") as fl:
-        fl.write(base64.b64encode("\n".join(filtered_data).encode()))
+    with open("./ss.txt", "w") as fl:
+        fl.write("\n".join(filtered_data))
