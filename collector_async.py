@@ -1,9 +1,9 @@
 import asyncio
 import base64
 import logging
+from pathlib import Path
 
 import aiohttp
-
 from sources import urls
 
 # Configure logging
@@ -29,7 +29,8 @@ async def fetch_url(session, url):
             return await response.read()
     except aiohttp.ClientError as e:
         # Log URL and error message if there's a URL error
-        logger.error(f"Error accessing {url}: {e}")
+        msg = f"Error accessing {url}: {e}"
+        logger.exception(msg)
 
 
 async def parse_data(session, url):
@@ -42,28 +43,40 @@ async def parse_data(session, url):
         return data.decode("utf-8")
     except Exception as e:
         # Log URL and error message if there's a URL error
-        logger.error(f"Error parsing data from {url}: {e}")
+        msg = f"Error parsing data from {url}: {e}"
+        logger.exception(msg)
 
 
 async def main(urls):
+    results = []
     async with aiohttp.ClientSession() as session:
         tasks = [parse_data(session, url) for url in urls]
         results = await asyncio.gather(*tasks)
 
-        filtered_data = [
-            line
-            for result in results
-            if result
-            for line in result.splitlines()
-            if line.startswith("ss://") and any(True for flag in western_counties if flag in line)
-        ]
+    filtered_data = [
+        line
+        for result in results
+        if result
+        for line in result.splitlines()
+        if line.startswith("ss://") and any(True for flag in western_counties if flag in line)
+    ]
 
-    return filtered_data
+    unique_configs = set()
+    for line in filtered_data:
+        try:
+            ip_port = line.split("@")[1].split("#")[0]
+            if any(True for config in unique_configs if ip_port in config):
+                continue
+            unique_configs.add(line)
+        except Exception as err:
+            msg = f"{err}"
+            logger.exception(msg)
+    return unique_configs
 
 
 if __name__ == "__main__":
-    filtered_data = set(asyncio.run(main(urls)))
+    filtered_data = asyncio.run(main(urls))
 
     # Write b64encoded data to file
-    with open("./ss.txt", "w") as fl:
+    with Path("./ss.txt").open("w") as fl:
         fl.write("\n".join(filtered_data))
