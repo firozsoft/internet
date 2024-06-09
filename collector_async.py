@@ -17,9 +17,8 @@ logger.addHandler(stream_handler)
 # /Configure logging
 
 western_counties = (
-    "🇬🇧",
     "🇺🇸",
-    # "🇩🇪", "🇫🇷", "🇳🇱"
+    # "🇬🇧", "🇩🇪", "🇫🇷", "🇳🇱"
 )
 
 
