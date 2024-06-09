@@ -31,6 +31,9 @@ jobs:
       - name: Run the collector script
         run: python collector_async.py
 
+      - name: Run the pinger script
+        run: python pinger.py
+
       - name: Push updated file
         uses: EndBug/add-and-commit@v9
         with:
