@@ -79,3 +79,5 @@ if __name__ == "__main__":
     # Write b64encoded data to file
     with Path("./ss.txt").open("w") as fl:
         fl.write("\n".join(filtered_data))
+
+    logger.info("Reading sources has been completed successfully!")

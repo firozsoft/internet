@@ -1,6 +1,17 @@
 import asyncio
+import logging
 import time
 from pathlib import Path
+
+# Configure logging
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logger.addHandler(stream_handler)
+# /Configure logging
 
 
 # Function to parse the server list file
@@ -68,3 +79,4 @@ async def main(file_path):
 if __name__ == "__main__":
     file_path = "ss.txt"  # Path to your server list file
     asyncio.run(main(file_path))
+    logger.info("Reading sources has been completed successfully!")
