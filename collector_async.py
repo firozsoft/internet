@@ -19,6 +19,7 @@ logger.addHandler(stream_handler)
 western_counties = (
     "🇺🇸",
     "🇬🇧",
+    "🇹🇷",
     # "🇩🇪",
     # "🇫🇷",
     "🇳🇱",
