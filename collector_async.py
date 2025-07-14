@@ -14,7 +14,6 @@ stream_handler.setFormatter(formatter)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 logger.addHandler(stream_handler)
-# /Configure logging
 
 western_counties = (
     "🇺🇸",
@@ -32,57 +31,50 @@ async def fetch_url(session, url):
         async with session.get(url) as response:
             return await response.read()
     except aiohttp.ClientError as e:
-        # Log URL and error message if there's a URL error
-        msg = f"Error accessing {url}: {e}"
-        logger.exception(msg)
+        logger.error("Error accessing %s: %s", url, e)
+        return None
 
 
 async def parse_data(session, url):
     data = await fetch_url(session, url)
+    if data is None:
+        return None
     try:
-        # Decode data if it's base64 encoded
         return base64.b64decode(data).decode("utf-8")
     except UnicodeDecodeError:
-        # If not base64 encoded, use the data as is
         return data.decode("utf-8")
     except Exception as e:
-        # Log URL and error message if there's a URL error
-        msg = f"Error parsing data from {url}: {e}"
-        logger.exception(msg)
+        logger.error("Error parsing data from %s: %s", url, e)
+    return None
 
 
 async def main(urls):
-    results = []
     async with aiohttp.ClientSession() as session:
         tasks = [parse_data(session, url) for url in urls]
         results = await asyncio.gather(*tasks)
 
-    filtered_data = [
+    filtered_lines = [
         line
         for result in results
         if result
         for line in result.splitlines()
-        if line.startswith("ss://") and any(True for flag in western_counties if flag in line)
+        if line.startswith("ss://") and any(flag in line for flag in western_counties)
     ]
 
     unique_configs = set()
-    for line in filtered_data:
+    for line in filtered_lines:
         try:
             ip_port = line.split("@")[1].split("#")[0]
-            if any(True for config in unique_configs if ip_port in config):
+            if any(ip_port in config for config in unique_configs):
                 continue
             unique_configs.add(line)
         except Exception as err:
-            msg = f"{err}"
-            logger.exception(msg)
+            logger.error("Failed to extract IP/Port: %s", err)
     return unique_configs
 
 
 if __name__ == "__main__":
-    filtered_data = asyncio.run(main(urls))
-
-    # Write b64encoded data to file
-    with Path("./ss.txt").open("w") as fl:
-        fl.write("\n".join(filtered_data))
-
+    filtered_configs = asyncio.run(main(urls))
+    with Path("./ss.txt").open("w", encoding="utf-8") as fl:
+        fl.write("\n".join(filtered_configs))
     logger.info("Reading sources has been completed successfully!")
