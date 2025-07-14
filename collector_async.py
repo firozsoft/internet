@@ -16,10 +16,10 @@ logger.setLevel(logging.INFO)
 logger.addHandler(stream_handler)
 
 western_counties = (
-    "🇺🇸",
-    "🇬🇧",
-    "🇳🇱",
-    "🇦🇪",
+    "US",
+    "GB",
+    "NL",
+    "AE",
 )
 
 
@@ -54,7 +54,7 @@ async def main(urls):
     for result in results:
         if result:
             for line in result.splitlines():
-                if line.startswith("ss://"): #  and any(flag in line for flag in western_counties)
+                if line.startswith("ss://") and any(flag in line for flag in western_counties):
                     filtered_lines.append(line)
 
     unique_configs = set()
