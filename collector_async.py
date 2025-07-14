@@ -16,10 +16,10 @@ logger.setLevel(logging.INFO)
 logger.addHandler(stream_handler)
 
 western_counties = (
-    "US",
-    "GB",
-    "NL",
-    "AE",
+    "US-",
+    "GB-",
+    "NL-",
+    "AE-",
 )
 
 
