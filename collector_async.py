@@ -18,9 +18,6 @@ logger.addHandler(stream_handler)
 western_counties = (
     "🇺🇸",
     "🇬🇧",
-    "🇹🇷",
-    # "🇩🇪",
-    # "🇫🇷",
     "🇳🇱",
     "🇦🇪",
 )
@@ -38,14 +35,14 @@ async def fetch_url(session, url):
 async def parse_data(session, url):
     data = await fetch_url(session, url)
     if data is None:
-        return f"Fetched nothing from url {url}"
+        return None
     try:
         return base64.b64decode(data).decode("utf-8")
     except UnicodeDecodeError:
         return data.decode("utf-8")
     except Exception as e:
         logger.error("Error parsing data from %s: %s", url, e)
-    return f"An exception or something happened for url {url}"
+    return None
 
 
 async def main(urls):
@@ -53,13 +50,13 @@ async def main(urls):
         tasks = [parse_data(session, url) for url in urls]
         results = await asyncio.gather(*tasks)
 
-    filtered_lines = [
-        line
-        for result in results
-        if result
-        for line in result.splitlines()
-        if line.startswith("ss://") and any(flag in line for flag in western_counties)
-    ]
+    filtered_lines = []
+    for result in results:
+        for line in result.splitlines():
+            if line.startswith("ss://"): #  and any(flag in line for flag in western_counties)
+                filtered_lines.append(line)
+
+    print(filtered_lines)
 
     unique_configs = set()
     for line in filtered_lines:
