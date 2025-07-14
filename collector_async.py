@@ -52,11 +52,10 @@ async def main(urls):
 
     filtered_lines = []
     for result in results:
-        for line in result.splitlines():
-            if line.startswith("ss://"): #  and any(flag in line for flag in western_counties)
-                filtered_lines.append(line)
-
-    print(filtered_lines)
+        if result:
+            for line in result.splitlines():
+                if line.startswith("ss://"): #  and any(flag in line for flag in western_counties)
+                    filtered_lines.append(line)
 
     unique_configs = set()
     for line in filtered_lines:
