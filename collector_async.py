@@ -38,14 +38,14 @@ async def fetch_url(session, url):
 async def parse_data(session, url):
     data = await fetch_url(session, url)
     if data is None:
-        return None
+        return f"Fetched nothing from url {url}"
     try:
         return base64.b64decode(data).decode("utf-8")
     except UnicodeDecodeError:
         return data.decode("utf-8")
     except Exception as e:
         logger.error("Error parsing data from %s: %s", url, e)
-    return None
+    return f"An exception or something happened for url {url}"
 
 
 async def main(urls):
